@@ -11,8 +11,9 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ConfirmationToken {
-    private String token;
+public class AccountDetailsRequest {
+    private String email;
+    private String username;
     private LocalDateTime createdAt;
     private LocalDateTime expiredAt;
 }

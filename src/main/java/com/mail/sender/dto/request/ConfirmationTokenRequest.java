@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ConfirmationTokenRequest {
-    private String email;
-    private ConfirmationToken token;
+    private String token;
+    private AccountDetailsRequest accountDetails;
 }

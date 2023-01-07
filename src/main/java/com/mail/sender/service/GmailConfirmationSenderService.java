@@ -24,8 +24,8 @@ public class GmailConfirmationSenderService implements EmailSender<ConfirmationT
 
     @KafkaListener(topics = "account_confirmation", groupId = "account_confirmation_group_id")
     public void confirmationMessageListener(ConfirmationTokenRequest confirmationTokenRequest) {
-        String userConfirmationLink = String.format(accountConfirmationTemplate, confirmationTokenRequest.getEmail(),
-                confirmationLink + confirmationTokenRequest.getToken().getToken());
+        String userConfirmationLink = String.format(accountConfirmationTemplate, confirmationTokenRequest.getAccountDetails().getUsername(),
+                confirmationLink + confirmationTokenRequest.getToken());
         this.send(confirmationTokenRequest, userConfirmationLink);
     }
 
@@ -36,13 +36,13 @@ public class GmailConfirmationSenderService implements EmailSender<ConfirmationT
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
 
             helper.setText(message, true);
-            helper.setTo(messageDetails.getEmail());
+            helper.setTo(messageDetails.getAccountDetails().getEmail());
             helper.setSubject("Account confirmation");
             helper.setFrom("asdasd.sender@gmail.com");
 
             mailSender.send(mimeMessage);
         } catch (MessagingException e) {
-            log.info("asd");
+            log.info(e.toString());
             throw new RuntimeException(e);
         }
     }
