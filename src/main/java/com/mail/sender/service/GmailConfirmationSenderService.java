@@ -3,6 +3,7 @@ package com.mail.sender.service;
 import com.mail.sender.dto.request.ConfirmationTokenRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -16,9 +17,10 @@ import javax.mail.internet.MimeMessage;
 @RequiredArgsConstructor
 public class GmailConfirmationSenderService implements EmailSender<ConfirmationTokenRequest> {
     private final JavaMailSender mailSender;
-    private final String confirmationLink = "http://localhost:8083/api/v1/accounts/confirm?token=";
-
     private final String accountConfirmationTemplate;
+
+    @Value("${confirmation.link.template}")
+    private String confirmationLink;
 
     @KafkaListener(topics = "account_confirmation", groupId = "account_confirmation_group_id")
     public void confirmationMessageListener(ConfirmationTokenRequest confirmationTokenRequest) {
