@@ -18,7 +18,7 @@ public class ConfirmationSenderService implements EmailSender<ConfirmationTokenR
     private final JavaMailSender mailSender;
     private final String confirmationLink = "http://localhost:8083/api/v1/accounts/confirm?token=";
 
-    @KafkaListener(topics = "account_confirmation", groupId = "account_confirmation_group_id")
+//    @KafkaListener(topics = "account_confirmation", groupId = "account_confirmation_group_id")
     public void confirmationMessageListener(ConfirmationTokenRequest confirmationTokenRequest) {
         String messageHtml = "<div style=\"font-family:Helvetica,Arial,sans-serif;font-size:16px;margin:0;color:#0b0c0c\">\n" +
                              "\n" +
@@ -96,10 +96,12 @@ public class ConfirmationSenderService implements EmailSender<ConfirmationTokenR
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
 
-            helper.setText(message, true);
+            helper.setText(message);
             helper.setTo(messageDetails.getEmail());
             helper.setSubject("Account confirmation");
-            helper.setFrom("ckopo.6ygy@gmail.com");
+            helper.setFrom("asdasd.sender@gmail.com");
+
+            mailSender.send(mimeMessage);
         } catch (MessagingException e) {
             log.info("asd");
             throw new RuntimeException(e);
