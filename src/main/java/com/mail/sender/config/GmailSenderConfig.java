@@ -10,6 +10,7 @@ import java.util.Properties;
 
 @Configuration
 public class GmailSenderConfig {
+
     @Value("${email.address}")
     private String emailAddress;
 
