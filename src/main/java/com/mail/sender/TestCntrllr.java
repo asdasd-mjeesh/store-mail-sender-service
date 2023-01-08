@@ -1,7 +1,7 @@
 package com.mail.sender;
 
 import com.mail.sender.dto.request.ConfirmationTokenRequest;
-import com.mail.sender.service.GmailConfirmationSenderService;
+import com.mail.sender.service.senders.GmailConfirmationSenderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
