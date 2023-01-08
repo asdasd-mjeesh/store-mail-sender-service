@@ -1,4 +1,4 @@
-package com.mail.sender.config;
+package com.mail.sender.config.kafka;
 
 import org.apache.kafka.clients.admin.NewTopic;
 import org.springframework.beans.factory.annotation.Value;

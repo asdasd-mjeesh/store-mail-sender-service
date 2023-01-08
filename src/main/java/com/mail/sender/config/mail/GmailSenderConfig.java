@@ -1,4 +1,4 @@
-package com.mail.sender.config;
+package com.mail.sender.config.mail;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

@@ -1,4 +1,4 @@
-package com.mail.sender.config;
+package com.mail.sender.config.kafka;
 
 import com.mail.sender.dto.request.ConfirmationTokenRequest;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
