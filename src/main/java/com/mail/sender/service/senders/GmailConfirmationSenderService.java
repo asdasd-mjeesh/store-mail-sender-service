@@ -1,6 +1,6 @@
 package com.mail.sender.service.senders;
 
-import com.mail.sender.dto.request.ConfirmationTokenRequest;
+import com.mail.sender.dto.request.AccountRequest;
 import com.mail.sender.exception.ModelValidationException;
 import com.mail.sender.service.validator.ApplicationModelValidator;
 import lombok.RequiredArgsConstructor;
@@ -9,16 +9,16 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import javax.validation.Valid;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class GmailConfirmationSenderService implements EmailSender<ConfirmationTokenRequest> {
+public class GmailConfirmationSenderService implements EmailSender<AccountRequest> {
     private final String accountConfirmationTemplate;
     private final ApplicationModelValidator applicationModelValidator;
     private final JavaMailSender mailSender;
@@ -26,9 +26,10 @@ public class GmailConfirmationSenderService implements EmailSender<ConfirmationT
     @Value("${confirmation.link.template}")
     private String confirmationLink;
 
-    @KafkaListener(topics = "account_confirmation", groupId = "account_confirmation_group_id")
-    public void confirmationMessageListener(@Valid ConfirmationTokenRequest confirmationTokenRequest) {
-        String validationViolations = applicationModelValidator.validate(confirmationTokenRequest);
+    @Payload
+    @KafkaListener(topics = "${kafka.topic.names.account.confirmation}", groupId = "account_confirmation_group_id")
+    public void confirmationMessageListener(AccountRequest accountRequest) {
+        String validationViolations = applicationModelValidator.validate(accountRequest);
         if (!validationViolations.isBlank()) {
             log.error(validationViolations);
             throw new ModelValidationException(validationViolations);
@@ -36,19 +37,19 @@ public class GmailConfirmationSenderService implements EmailSender<ConfirmationT
 
         String userConfirmationLink = String.format(
                 accountConfirmationTemplate,
-                confirmationTokenRequest.getAccountDetails().getUsername(),
-                confirmationLink + confirmationTokenRequest.getToken());
-        this.send(confirmationTokenRequest, userConfirmationLink);
+                accountRequest.getUsername(),
+                confirmationLink + accountRequest.getConfirmationTokenDetails().getToken());
+        this.send(accountRequest, userConfirmationLink);
     }
 
     @Override
-    public void send(ConfirmationTokenRequest messageDetails, String message) {
+    public void send(AccountRequest account, String message) {
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
 
             helper.setText(message, true);
-            helper.setTo(messageDetails.getAccountDetails().getEmail());
+            helper.setTo(account.getEmail());
             helper.setSubject("Account confirmation");
             helper.setFrom("asdasd.sender@gmail.com");
 
