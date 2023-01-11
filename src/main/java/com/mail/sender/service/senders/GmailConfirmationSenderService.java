@@ -27,7 +27,8 @@ public class GmailConfirmationSenderService implements EmailSender<AccountReques
     private String confirmationLink;
 
     @Payload
-    @KafkaListener(topics = "${kafka.topic.names.account.confirmation}", groupId = "account_confirmation_group_id")
+    @KafkaListener(topics = "${kafka.topic.names.account.confirmation}", groupId = "account_confirmation_group_id",
+            containerFactory = "listenerContainerFactory")
     public void confirmationMessageListener(AccountRequest accountRequest) {
         String validationViolations = applicationModelValidator.validate(accountRequest);
         if (!validationViolations.isBlank()) {
