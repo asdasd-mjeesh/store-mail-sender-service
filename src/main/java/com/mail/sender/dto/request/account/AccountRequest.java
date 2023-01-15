@@ -1,4 +1,4 @@
-package com.mail.sender.dto.request;
+package com.mail.sender.dto.request.account;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,6 +15,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AccountRequest {
+
     @Email
     private String email;
 

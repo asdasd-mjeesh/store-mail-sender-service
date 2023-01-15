@@ -1,0 +1,9 @@
+<div>
+    <h2>Hello, dear %s!</h2>
+    Thank you for your order!
+    Total price of your order is %s.
+    You have made that order at %s!
+    You can see other order details and status in the link below
+    <br>
+    <p style="Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c"><a href="%s">Order details</a></p></blockquote>
+</div>

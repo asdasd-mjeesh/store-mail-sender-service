@@ -1,6 +1,6 @@
 package com.mail.sender.service.senders;
 
-import com.mail.sender.dto.request.AccountRequest;
+import com.mail.sender.dto.request.account.AccountRequest;
 import com.mail.sender.exception.ModelValidationException;
 import com.mail.sender.service.validator.ApplicationModelValidator;
 import lombok.RequiredArgsConstructor;
@@ -9,26 +9,25 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.util.Arrays;
 
-@Service
 @Slf4j
 @RequiredArgsConstructor
-public class GmailConfirmationSenderService implements EmailSender<AccountRequest> {
-    private final String accountConfirmationTemplate;
+@Service
+public class GmailConfirmationSender implements EmailSender<AccountRequest> {
     private final ApplicationModelValidator applicationModelValidator;
     private final JavaMailSender mailSender;
+    private final String accountConfirmationTemplate;
 
-    @Value("${confirmation.link.template}")
+    @Value("${mail.template.confirmation.link}")
     private String confirmationLink;
 
-    @Payload
     @KafkaListener(topics = "${kafka.topic.names.account.confirmation}", groupId = "account_confirmation_group_id",
-            containerFactory = "listenerContainerFactory")
+            containerFactory = "mailConfirmationListenerContainerFactory")
     public void confirmationMessageListener(AccountRequest accountRequest) {
         String validationViolations = applicationModelValidator.validate(accountRequest);
         if (!validationViolations.isBlank()) {
@@ -56,7 +55,7 @@ public class GmailConfirmationSenderService implements EmailSender<AccountReques
 
             mailSender.send(mimeMessage);
         } catch (MessagingException e) {
-            throw new RuntimeException(e);
+            log.error("sending mail confirmation was failed. Exception stack trace: " + Arrays.toString(e.getStackTrace()));
         }
     }
 }

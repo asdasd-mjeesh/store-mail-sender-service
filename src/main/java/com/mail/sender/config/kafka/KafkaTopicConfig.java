@@ -8,13 +8,18 @@ import org.springframework.kafka.config.TopicBuilder;
 
 @Configuration
 public class KafkaTopicConfig {
-    @Value("${kafka.topic.names.account.confirmation}")
-    private String accountMailConfirmationTopicName;
 
     @Bean
-    public NewTopic accountConfirmationTopic() {
+    public NewTopic accountConfirmationTopic(@Value("${kafka.topic.names.account.confirmation}") String accountMailConfirmationTopicName) {
         return TopicBuilder
                 .name(accountMailConfirmationTopicName)
+                .build();
+    }
+
+    @Bean
+    public NewTopic madeOrderNotificationTopic(@Value("${kafka.topic.names.order.made.notification}") String madeOrderMailNotificationTopicName) {
+        return TopicBuilder
+                .name(madeOrderMailNotificationTopicName)
                 .build();
     }
 }

@@ -1,4 +1,4 @@
-package com.mail.sender.dto.request;
+package com.mail.sender.dto.request.account;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ConfirmationTokenDetailsRequest {
+
     @NotBlank
     private String token;
 
