@@ -18,7 +18,7 @@ import java.util.Arrays;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class GmailConfirmationSender implements EmailSender<AccountRequest> {
+public class ConfirmationGmailSender implements EmailSender<AccountRequest> {
     private final ApplicationModelValidator applicationModelValidator;
     private final JavaMailSender mailSender;
     private final String accountConfirmationTemplate;

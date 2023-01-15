@@ -18,7 +18,7 @@ import java.util.Arrays;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class MadeOrderNotificationSender implements EmailSender<MadeOrderRequest> {
+public class MadeOrderNotificationGmailSender implements EmailSender<MadeOrderRequest> {
     private final ApplicationModelValidator applicationModelValidator;
     private final JavaMailSender mailSender;
     private final String orderNotificationTemplate;
