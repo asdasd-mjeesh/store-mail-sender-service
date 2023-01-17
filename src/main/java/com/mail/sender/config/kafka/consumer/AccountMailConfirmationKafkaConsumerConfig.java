@@ -1,6 +1,6 @@
-package com.mail.sender.config.kafka;
+package com.mail.sender.config.kafka.consumer;
 
-import com.mail.sender.dto.request.account.AccountRequest;
+import com.mail.sender.dto.kafka.consumer.account.AccountConfirmation;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
-public class KafkaOrderNotificationConsumerConfig {
+public class AccountMailConfirmationKafkaConsumerConfig {
 
     @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServerUrl;
@@ -27,21 +27,21 @@ public class KafkaOrderNotificationConsumerConfig {
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServerUrl);
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
-        props.put(JsonDeserializer.TYPE_MAPPINGS, "accountRequest:com.mail.sender.dto.request.account.AccountRequest");
+        props.put(JsonDeserializer.TYPE_MAPPINGS, "accountConfirmation:com.mail.sender.dto.kafka.consumer.account.AccountConfirmation");
         props.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
         return props;
     }
 
     @Bean
-    public ConsumerFactory<String, AccountRequest> orderNotificationsConsumerFactory() {
+    public ConsumerFactory<String, AccountConfirmation> mailConfirmationConsumerFactory() {
         return new DefaultKafkaConsumerFactory<>(consumerConfig());
     }
 
     @Bean
-    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, AccountRequest>> orderNotificationsListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, AccountRequest> listenerContainerFactory =
+    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, AccountConfirmation>> mailConfirmationListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, AccountConfirmation> listenerContainerFactory =
                 new ConcurrentKafkaListenerContainerFactory<>();
-        listenerContainerFactory.setConsumerFactory(this.orderNotificationsConsumerFactory());
+        listenerContainerFactory.setConsumerFactory(this.mailConfirmationConsumerFactory());
         return listenerContainerFactory;
     }
 }

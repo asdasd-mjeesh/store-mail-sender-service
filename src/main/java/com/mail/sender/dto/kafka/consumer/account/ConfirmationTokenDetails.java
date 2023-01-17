@@ -1,4 +1,4 @@
-package com.mail.sender.dto.request.account;
+package com.mail.sender.dto.kafka.consumer.account;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ConfirmationTokenDetailsRequest {
+public class ConfirmationTokenDetails {
 
     @NotBlank
     private String token;

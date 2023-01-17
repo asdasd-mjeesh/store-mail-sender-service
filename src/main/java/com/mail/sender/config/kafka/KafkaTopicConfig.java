@@ -10,7 +10,7 @@ import org.springframework.kafka.config.TopicBuilder;
 public class KafkaTopicConfig {
 
     @Bean
-    public NewTopic accountConfirmationTopic(@Value("${kafka.topic.names.account.confirmation}") String accountMailConfirmationTopicName) {
+    public NewTopic accountConfirmationTopic(@Value("${kafka.topic.names.mail.account-confirmation-message}") String accountMailConfirmationTopicName) {
         return TopicBuilder
                 .name(accountMailConfirmationTopicName)
                 .build();

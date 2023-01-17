@@ -1,4 +1,4 @@
-package com.mail.sender.dto.request.order;
+package com.mail.sender.dto.kafka.consumer.order;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,13 +13,13 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MadeOrderRequest {
+public class MadeOrder {
 
     @NotNull
     private Long orderId;
 
     @NotNull
-    private OrderOwnerDetailsRequest orderOwner;
+    private OrderOwnerDetails orderOwner;
 
     @NotNull
     @Min(10)

@@ -1,6 +1,6 @@
 package com.mail.sender.service.senders;
 
-import com.mail.sender.dto.request.account.AccountRequest;
+import com.mail.sender.dto.kafka.consumer.account.AccountConfirmation;
 import com.mail.sender.exception.ModelValidationException;
 import com.mail.sender.service.validator.ApplicationModelValidator;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ import java.util.Arrays;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class ConfirmationGmailSender implements EmailSender<AccountRequest> {
+public class ConfirmationGmailSender implements EmailSender<AccountConfirmation> {
     private final ApplicationModelValidator applicationModelValidator;
     private final JavaMailSender mailSender;
     private final String accountConfirmationTemplate;
@@ -26,10 +26,10 @@ public class ConfirmationGmailSender implements EmailSender<AccountRequest> {
     @Value("${mail.template.confirmation.link}")
     private String confirmationLink;
 
-    @KafkaListener(topics = "${kafka.topic.names.account.confirmation}", groupId = "account_confirmation_group_id",
+    @KafkaListener(topics = "${kafka.topic.names.mail.account-confirmation-message}", groupId = "account_confirmation_group_id",
             containerFactory = "mailConfirmationListenerContainerFactory")
-    public void confirmationMessageListener(AccountRequest accountRequest) {
-        String validationViolations = applicationModelValidator.validate(accountRequest);
+    public void confirmationMessageListener(AccountConfirmation accountConfirmation) {
+        String validationViolations = applicationModelValidator.validate(accountConfirmation);
         if (!validationViolations.isBlank()) {
             log.error(validationViolations);
             throw new ModelValidationException(validationViolations);
@@ -37,13 +37,13 @@ public class ConfirmationGmailSender implements EmailSender<AccountRequest> {
 
         String userConfirmationLink = String.format(
                 accountConfirmationTemplate,
-                accountRequest.getUsername(),
-                confirmationLink + accountRequest.getConfirmationTokenDetails().getToken());
-        this.send(accountRequest, userConfirmationLink);
+                accountConfirmation.getUsername(),
+                confirmationLink + accountConfirmation.getConfirmationTokenDetails().getToken());
+        this.send(accountConfirmation, userConfirmationLink);
     }
 
     @Override
-    public void send(AccountRequest account, String message) {
+    public void send(AccountConfirmation account, String message) {
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
